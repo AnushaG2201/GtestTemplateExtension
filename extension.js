@@ -54,25 +54,6 @@ function activate(context) {
 
 		var beforeRegex = /\((.*?)\)/
 
-		// //getting caller class
-		// var patternBeforeFunc = new RegExp(`(.+) ${functionName}`);
-		// var resultBefore = wholeText.match(patternBeforeFunc)
-		// var extensionVar = resultBefore[1].match(beforeRegex)
-
-		// var extentionParam = ""
-		// var pointerConstParam = ""
-
-		//extension or caller param func(a model) funcName()
-		//will get `model`
-		// if (extensionVar != null) {
-		// 	var extensionInsides = extensionVar[1].split(" ")
-
-		// 	if (extensionInsides[1].indexOf('*') > -1) {
-		// 		pointerConstParam = "&"
-		// 	}
-		// 	extentionParam = extensionInsides[1].replace(/[*\s]/g, '')
-		// }
-
 		//getting argument list
 		var pattern = new RegExp(`[\n\r]*${functionName}*([^\n\r]*)`);
 		var result = wholeText.match(pattern)
@@ -84,8 +65,6 @@ function activate(context) {
 		var tempType = ''
 		var argVarList = []
 
-		//iteration for variable from behind 
-		//done for function like func asda (n,i int)
 		for (var i = argsListString.length - 1; i >= 0; --i) {
 			argsListString[i] = argsListString[i].trim()
 			var nameAndType = argsListString[i].split(" ")
@@ -104,7 +83,7 @@ function activate(context) {
 		//cleaning
 		afterVar = afterVar.replace(/[(){}\s]/g, '')
 
-		var returnList = afterVar.split(",")
+		//var returnList = afterVar.split(",")
 		var argsList = helper.GetArgString(argVarList)
 		argsList.replace(/\t+/g, '')
 
@@ -117,10 +96,10 @@ ${helper.GetAssertString()}
 }`
 
 		//var isFirstTime = vscode.workspace.getConfiguration('Location of test file').get('current-directory') 
-		var initialPath = vscode.workspace.getConfiguration('Location.TestFile').get('path')
+		//var initialPath = vscode.workspace.getConfiguration('Location.TestFile').get('path')
 		var testFile = vscode.workspace.getConfiguration('Location')
 		var prop = testFile.get('TestFile')
-		console.log(initialPath)
+		//console.log(initialPath)
 		if (prop[helper.GetSourceFileName(currentlyOpenTabfilePath)] == undefined) {
 			console.log("I am inside")
 			var filePath = await GetUserEnteredFilePath()
@@ -179,7 +158,6 @@ function WriteToFile(absoluteFilePath, filename, message, testFunctionName) {
 					return
 				}
 				message += "\n"+"}"
-				console.log(getLineCount(absoluteFilePath));
 				let writer = fs.createWriteStream(filename, { flags: 'a+', start:charCount-2})
 				writer.write(message)
 			});

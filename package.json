@@ -1,12 +1,16 @@
 {
 	"name": "unittestgtest",
-	"displayName": "unittestgtest",
+	"displayName": "gtest Template Generator",
 	"description": "Generate template for gtests easily",
-	"version": "0.1.1",
+	"version": "0.0.1",
 	"publisher": "Anusha",
 	"engines": {
 		"vscode": "^1.44.0"
 	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/AnushaG2201/GtestTemplateExtension"
+	  },
 	"categories": [
 		"Other"
 	],
@@ -45,16 +49,10 @@
 					"Location.TestFile": {
 						"type": "object",
 						"properties": {
-							"current-directory":{
-								"type":"boolean"
-							},
-							"path":{
-								"type":"string"
-							}
+							
 						},
 						"default": {
-							"current-directory": true,
-							"path":"empty-file-path"
+							
 						}
 				}
 			}
