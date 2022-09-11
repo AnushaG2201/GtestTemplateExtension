@@ -1,21 +1,23 @@
 {
-	"name": "unittestgtest",
+	"name": "googletesttemplategenerator",
 	"displayName": "gtest Template Generator",
 	"description": "Generate template for gtests easily",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"publisher": "Anusha",
+	"icon": "resources/Gtest.jpg",
 	"engines": {
 		"vscode": "^1.44.0"
 	},
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/AnushaG2201/GtestTemplateExtension"
-	  },
+	},
 	"categories": [
 		"Other"
 	],
 	"activationEvents": [
-		"onCommand:cpp.gtesttemplate"
+		"onCommand:cpp.gtesttemplate",
+		"onCommand:cpp.mocktemplate"
 	],
 	"main": "./extension.js",
 	"contributes": {
@@ -23,6 +25,10 @@
 			{
 				"command": "cpp.gtesttemplate",
 				"title": "Generate gtest template"
+			},
+			{
+				"command": "cpp.mocktemplate",
+				"title": "Generate mock"
 			}
 		],
 		"menus": {
@@ -31,51 +37,50 @@
 					"command": "cpp.gtesttemplate",
 					"group": "YourGroup@1",
 					"when": "editorTextFocus && resourceLangId == cpp"
+				},
+				{
+					"command": "cpp.mocktemplate",
+					"group": "YourGroup@2",
+					"when": "editorTextFocus && resourceLangId == cpp"
 				}
 			],
-			"editor/context/copy":
-			[
+			"editor/context/copy": [
 				{
-				  "key": "ctrl+f5",
-				  "command": "workbench.action.reloadWindow",
-				  "when": "editorTextFocus"
+					"key": "ctrl+f5",
+					"command": "workbench.action.reloadWindow",
+					"when": "editorTextFocus"
 				}
-			  ]
+			]
 		},
-		"configuration":[
+		"configuration": [
 			{
 				"title": "Location of test file",
 				"properties": {
 					"Location.TestFile": {
 						"type": "object",
-						"properties": {
-							
-						},
-						"default": {
-							
-						}
+						"properties": {},
+						"default": {}
+					}
 				}
 			}
-		}
 		]
 	},
-
-	
-
 	"scripts": {
-		"lint": "eslint .",
-		"pretest": "npm run lint",
-		"test": "node ./test/runTest.js"
+		"build": "node extension.js",
+		"test": "standard"
 	},
 	"devDependencies": {
-		"@types/vscode": "^1.44.0",
 		"@types/glob": "^7.1.1",
 		"@types/mocha": "^7.0.2",
 		"@types/node": "^13.11.0",
+		"@types/vscode": "^1.44.0",
 		"eslint": "^6.8.0",
 		"glob": "^7.1.6",
 		"mocha": "^7.1.2",
 		"typescript": "^3.8.3",
 		"vscode-test": "^1.3.0"
+	},
+	"dependencies": {
+		"vsce": "^2.11.0"
 	}
 }
