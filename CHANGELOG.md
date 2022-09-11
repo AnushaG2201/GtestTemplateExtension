@@ -8,4 +8,9 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 - Initial release
 
+## 0.0.2
+
+- Bug fixes
+- Support for creating mock templates
+
 
