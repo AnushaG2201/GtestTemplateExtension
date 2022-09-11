@@ -86,31 +86,31 @@ async function executeMockTemplateCommand() {
 	generatedMock += "{\n"
 	generatedMock += "public:\n"
 	for (var j = i; j < lines.length; j++) {
+		var combinedLine = ""
 		if (lines[j].includes("};")) {
 			generatedMock += "};\n\n"
 			break;
 		}
+		
 		if (isInterface || lines[j].includes("virtual")) {
+			lines[j] = lines[j].replace("virtual", "");
 			if (lines[j].includes("(") && !(lines[j].includes(")"))) {
-				j += 1;
 				while (!(lines[j].includes(")"))) {
+					combinedLine+=lines[j]
 					j++;
 				}
+				combinedLine+=lines[j]
+				generatedMock = GetMockMethod(generatedMock,combinedLine)
 			}
 			else if (lines[j].includes("(") && lines[j].includes(")")) {
-				lines[j].replace("virtual", "");
-				var ReturnTypeAndMethodName = lines[j].substring(0, lines[j].indexOf('('));
-				ReturnTypeAndMethodName = ReturnTypeAndMethodName.trim();
-				var Args = lines[j].substring(lines[j].indexOf('('), (lines[j].indexOf(")") + 1));
-				var ReturnTypeAndMethodNameSplit = ReturnTypeAndMethodName.split(' ');
-				generatedMock += "MOCK_METHOD" + "(" + ReturnTypeAndMethodNameSplit[0] + "," + ReturnTypeAndMethodNameSplit[1] + "," + Args + "," + "(override)" + ")" + ";";
-				generatedMock += ("\n");
+				
+				generatedMock = GetMockMethod(generatedMock,lines[j]);
 			}
 		}
 
 	}
 	var shouldSelectFolder = false;
-	var filePath = await GetUserEnteredFilePath(shouldSelectFolder, "Source files | *.cpp")
+	var filePath = await GetUserEnteredFilePath(shouldSelectFolder)
 	var fileName
 	if (filePath[0]) {
 		fileName = filePath[0].fsPath
@@ -137,6 +137,16 @@ async function executeMockTemplateCommand() {
 			}
 		}
 	}
+}
+
+function GetMockMethod(generatedMock,line) {
+	var ReturnTypeAndMethodName = line.substring(0, line.indexOf('('));
+	ReturnTypeAndMethodName = ReturnTypeAndMethodName.trim();
+	var Args = line.substring(line.indexOf('('), (line.indexOf(")") + 1));
+	var ReturnTypeAndMethodNameSplit = ReturnTypeAndMethodName.split(' ');
+	generatedMock += "MOCK_METHOD" + "(" + ReturnTypeAndMethodNameSplit[0] + "," + ReturnTypeAndMethodNameSplit[ReturnTypeAndMethodNameSplit.length-1] + "," + Args + "," + "(override)" + ")" + ";";
+	generatedMock += ("\n");
+	return generatedMock;
 }
 
 function GetPositionToAppendForMock(text) {
@@ -235,7 +245,7 @@ ${helper.GetAssertString()}
 	//console.log(initialPath)
 	if (prop[helper.GetSourceFileName(currentlyOpenTabfilePath)] == undefined) {
 		var shouldSelectFolder = true;
-		var filePath = await GetUserEnteredFilePath(shouldSelectFolder, "")
+		var filePath = await GetUserEnteredFilePath(shouldSelectFolder)
 		var absoluteFilePath
 		var splitArg = "\\"
 		if (filePath[0]) {
@@ -296,17 +306,30 @@ function WriteToFile(absoluteFilePath, filename, message, position) {
 	});
 }
 
-async function GetUserEnteredFilePath(shouldSelectFolder, filter) {
-	const APP_FILE = await vscode.window.showOpenDialog({
+async function GetUserEnteredFilePath(shouldSelectFolder) {
+	var APP_FILE
+	if(shouldSelectFolder){
+	APP_FILE = await vscode.window.showOpenDialog({
 		filters: {
-			filter
+			
 		},
 		canSelectFolders: shouldSelectFolder,
 		canSelectFiles: !shouldSelectFolder,
 		canSelectMany: false,
 		openLabel: 'Select',
 	});
-
+	}
+	else{
+		APP_FILE = await vscode.window.showOpenDialog({
+			filters: {
+				'Source files': ['cpp'],
+			},
+			canSelectFolders: shouldSelectFolder,
+			canSelectFiles: !shouldSelectFolder,
+			canSelectMany: false,
+			openLabel: 'Select',
+		});
+	}
 	if (!APP_FILE || APP_FILE.length < 1) {
 		vscode.window.showInformationMessage("Enter a file path to create the template")
 		return

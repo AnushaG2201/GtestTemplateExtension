@@ -108,7 +108,11 @@ function GetHeaders(currentlyOpenTabfilePath) {
 
 function GetHeaderFileName(currentlyOpenTabfilePath) {
 	currentlyOpenTabfilePath = currentlyOpenTabfilePath.replace(".cpp", ".h")
-	const fileName = currentlyOpenTabfilePath.split("\\")
+	var splitArg="\\"
+	if(currentlyOpenTabfilePath.includes("/")){
+		splitArg = "/"
+	}
+	const fileName = currentlyOpenTabfilePath.split(splitArg)
 	return fileName[fileName.length - 1]
 }
 
