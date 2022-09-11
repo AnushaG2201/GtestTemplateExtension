@@ -50,8 +50,34 @@ function GetClassInitialization(currentlyOpenTabfilePath) {
 }
 
 function AddNameSpace() {
-	return "namespace unittest{"
-}
+	var stringToReturn =  "namespace unittest{\n"
+            stringToReturn += "namespace UnitTesters {\n" +
+             "using testing::_;\n" +
+            "using testing::A;\n" +
+            "using testing::An;" +
+            "using testing::AnyNumber;\n" +
+            "using testing::Const;\n" +
+            "using testing::DoDefault;\n" +
+            "using testing::Eq;\n" +
+            "using testing::Lt;\n" +
+            "using testing::MockFunction;\n" +
+            "using testing::Ref;\n" +
+            "using testing::Return;\n" +
+            "using testing::ReturnRef;\n" +
+            "using testing::TypedEq;\n" +
+            "\n" +
+            "template < typename T >\n" +
+
+        "class TemplatedCopyable\n" +
+        "{\n" +
+            "public:\n" +
+            "TemplatedCopyable() { }\n" +
+            "\n" +
+            "template<typename U>\n" +
+            "TemplatedCopyable(const U& other) {}  // NOLINT\n" +
+        "};\n";
+            return stringToReturn;
+        }
 
 function GetTestClassName(className) {
 	return className.replace(".h", "") + "Test";
@@ -82,7 +108,11 @@ function GetHeaders(currentlyOpenTabfilePath) {
 
 function GetHeaderFileName(currentlyOpenTabfilePath) {
 	currentlyOpenTabfilePath = currentlyOpenTabfilePath.replace(".cpp", ".h")
-	const fileName = currentlyOpenTabfilePath.split("/")
+	var splitArg="\\"
+	if(currentlyOpenTabfilePath.includes("/")){
+		splitArg = "/"
+	}
+	const fileName = currentlyOpenTabfilePath.split(splitArg)
 	return fileName[fileName.length - 1]
 }
 
@@ -93,6 +123,7 @@ function GetSourceFileName(currentlyOpenTabfilePath) {
 function GetCurrentDirectory(currentlyOpenTabfilePath) {
 	return path.dirname(currentlyOpenTabfilePath)
 }
+
 
 module.exports = {
 	GetArgString,
